@@ -1,0 +1,21 @@
+{
+  "name": "test-heroku",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^16.10.3",
+    "tsm": "^2.1.0"
+  },
+  "dependencies": {
+    "@types/faker": "^5.5.8",
+    "faker": "^5.5.3",
+    "log-update": "^4.0.0",
+    "mongodb": "^4.1.3"
+  }
+}
