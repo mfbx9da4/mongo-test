@@ -8,12 +8,15 @@ import assert from 'assert'
 console.log('stocks.length', stocks.length)
 
 type Row = {
-  key: `${Row['stock']}_${Row['metric']}`
+  /** stock_metric concatenated */
+  key: string
   stock: string
   metric: string
   data: number[]
-  start: number // timestamp start date
-  end: number // timestamp end date
+  /** timestamp start date */
+  start: number
+  /** timestamp end date */
+  end: number
 }
 
 /**
