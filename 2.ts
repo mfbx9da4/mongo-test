@@ -12,8 +12,8 @@ type Row = {
   stock: string
   metric: string
   data: number[]
-  start: number
-  end: number
+  start: number // timestamp start date
+  end: number // timestamp end date
 }
 
 /**
