@@ -8,7 +8,9 @@ export function generateQuery(opts?: { stocksN?: number; metricsN?: number }) {
     { length: safeOpts.stocksN },
     () => stocks[randomInt(stocks.length)]
   )
-  const metrics = Array.from({ length: safeOpts.metricsN }, () => randomInt(10))
+  const metrics = Array.from({ length: safeOpts.metricsN }, () =>
+    String(randomInt(10))
+  )
   const dateRange = {
     start: faker.date.between(
       '2000/01/01',

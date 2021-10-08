@@ -14,6 +14,7 @@
     "tsm": "^2.1.0"
   },
   "dependencies": {
+    "@leafac/sqlite": "^1.5.0",
     "@types/faker": "^5.5.8",
     "date-fns": "^2.25.0",
     "faker": "^5.5.3",
