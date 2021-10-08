@@ -1,17 +1,11 @@
 import assert from 'assert'
 import faker from 'faker'
 import logUpdate from 'log-update'
-import { Db, MongoClient } from 'mongodb'
-import { stocks as allStocks } from './stocks'
-const url = process.env.MONGO_URL || `mongodb://root:example@localhost:27017/`
-const client = new MongoClient(url)
-const DB_NAME = 'myDbName'
+import { generateQuery } from './generateQuery'
 
-function randomInt(a) {
-  return Math.floor(Math.random() * a)
-}
+import { getClient, getCollection, getDb } from './mongo'
+import { stocks } from './stocks'
 
-const stocks = allStocks.slice(0, 500)
 console.log('stocks.length', stocks.length)
 
 type Row = {
@@ -58,17 +52,16 @@ function* generateSeedData() {
 
 async function seedData() {
   const db = await getDb()
-  await db.dropDatabase()
-  const collectionA = db.collection('a')
-  const collectionB = db.collection('b')
+  await db.dropCollection('a')
+  const collection = db.collection('a')
   let count = 0
   for (const batch of generateSeedData()) {
     if (batch.length === 0) continue
     count += batch.length
-    await collectionA.insertMany(batch)
+    await collection.insertMany(batch)
     logUpdate(`inserted: ${count}`)
   }
-  await collectionA.createIndex([
+  await collection.createIndex([
     ['stock', 1],
     ['metric', 1],
     ['date', 1],
@@ -86,25 +79,8 @@ async function timeFindOne() {
   console.log(explain.queryPlanner)
 }
 
-function generateQuery() {
-  const stocksQ = Array.from(
-    { length: 500 },
-    () => stocks[randomInt(stocks.length)]
-  )
-  const metrics = Array.from({ length: 4 }, () => randomInt(10))
-  const dateRange = {
-    start: faker.date.between(
-      '2000/01/01',
-      new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 2)
-    ),
-    end: new Date(),
-  }
-
-  return { stocks: stocksQ, metrics, dateRange }
-}
-
-async function timeQuery1() {
-  console.log('timeQuery1')
+async function timeQuery() {
+  console.log('timeQuery')
   const collection = await getCollection('a')
   const queryInput = generateQuery()
   console.log(queryInput)
@@ -128,30 +104,17 @@ async function timeQuery1() {
   console.log('explain', explain.queryPlanner)
 }
 
-let db: Db | undefined
-async function getDb() {
-  if (db) return db
-  console.log('connecting')
-  await client.connect()
-  console.log('connected')
-  db = client.db(DB_NAME)
-  return db
-}
-
-async function getCollection(name) {
-  const db = await getDb()
-  return db.collection(name)
-}
-
 async function main() {
   // const collection = await getCollection('a')
   // console.log('collection.count()', await collection.estimatedDocumentCount())
   // await seedData()
-  await timeFindOne()
-  // await timeQuery1()
+  // await timeFindOne()
+  await timeQuery()
 
   return 'done.'
 }
+
+const client = getClient()
 
 main()
   .then(console.log)
