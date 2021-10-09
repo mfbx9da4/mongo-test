@@ -87,12 +87,6 @@ function timeQuery() {
   console.log('timeQuery')
   const db = getDb()
   const queryInput = generateQuery()
-  console.log(queryInput)
-  const foo = ['CPTA', 'CIBR', 'BANFP']
-  console.time('findData')
-  const a = db.all(sql`SELECT * FROM data where stock in ${foo} LIMIT 1`)
-  console.log('a', a)
-  return
   const stm = db.prepare(`SELECT * FROM data where 
   stock in (${queryInput.stocks.map(() => '?').join(',')}) and
   metric in (${queryInput.metrics.map(() => '?').join(',')}) and
